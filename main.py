@@ -22,7 +22,6 @@ def compute_rolling_growth(
     months: int,
     start_value: float,
     columns: list[str],
-    equity_share: float,
     expense_per_period: float,
 ) -> pd.DataFrame:
     """
@@ -32,8 +31,8 @@ def compute_rolling_growth(
     result = pd.DataFrame({"Start Date": df["Date"]})
 
     for col in columns:
-        # Blend equity factor with cash (factor of 1.0) using the chosen equity share
-        monthly_mult = (1 + equity_share * (df[col] - 1)) * (1 - expense_per_period)
+        # Apply per-period expense directly to the monthly factor
+        monthly_mult = df[col] * (1 - expense_per_period)
         # Rolling product gives cumulative growth for each window; shift aligns to window start
         growth = (
             monthly_mult.rolling(window=months, min_periods=months)
@@ -70,7 +69,6 @@ def main():
         default=dataset_options,
         format_func=lambda x: labels[x],
     )
-    equity_pct = st.slider("Equity allocation (%)", min_value=0, max_value=100, value=100, step=1)
     expense_bps = st.slider("Annual expense (bps)", min_value=0, max_value=100, value=0, step=5)
     period_unit = st.radio("Period unit", ["Months", "Years"], horizontal=True)
     period_length = st.number_input(
@@ -85,7 +83,6 @@ def main():
         st.stop()
 
     months = period_length if period_unit == "Months" else period_length * 12
-    equity_share = equity_pct / 100
     expense_rate = expense_bps / 10000  # convert bps to decimal annual
     expense_per_period = expense_rate / 12 if period_unit == "Months" else expense_rate
 
@@ -107,7 +104,7 @@ def main():
 
         with st.spinner(f"Computing rolling growth for {labels[ds]}..."):
             res = compute_rolling_growth(
-                df, months, start_value, selected, equity_share, expense_per_period
+                df, months, start_value, selected, expense_per_period
             )
 
         value_cols = [c for c in res.columns if c.endswith("Ending Value")]
