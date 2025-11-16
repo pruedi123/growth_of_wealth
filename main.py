@@ -73,7 +73,7 @@ def main():
     period_unit = st.radio("Period unit", ["Months", "Years"], horizontal=True)
     period_length = st.number_input(
         f"Number of {period_unit.lower()}",
-        value=12 if period_unit == "Months" else 1,
+        value=120 if period_unit == "Months" else 10,
         min_value=1,
         step=1,
     )
