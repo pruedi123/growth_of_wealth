@@ -57,7 +57,7 @@ def main():
     )
 
     # Inputs
-    start_value = st.number_input("Beginning portfolio value", value=1000.0, min_value=0.01)
+    start_value = st.number_input("Beginning portfolio value", value=10000.0, min_value=0.01)
     dataset_options = ["global_mo_factors.xlsx", "spx_mo_factors.xlsx"]
     labels = {
         "global_mo_factors.xlsx": "Global factors",
