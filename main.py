@@ -119,9 +119,6 @@ def main():
         pd.concat(results_long, ignore_index=True) if results_long else pd.DataFrame()
     )
 
-    st.subheader("Ending values for each rolling window")
-    st.dataframe(results_long, height=500, use_container_width=True)
-
     if not results_long.empty:
         chart_data = (
             results_long.pivot_table(
@@ -130,6 +127,9 @@ def main():
         )
         chart_data.columns = [f"{ds} - {series}" for ds, series in chart_data.columns]
         st.line_chart(chart_data, use_container_width=True)
+
+    st.subheader("Ending values for each rolling window")
+    st.dataframe(results_long, height=500, use_container_width=True)
 
     st.info(
         "Every row represents a full rolling period starting at the given date and ending "
