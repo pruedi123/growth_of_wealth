@@ -71,7 +71,7 @@ def main():
         format_func=lambda x: labels[x],
     )
     equity_pct = st.slider("Equity allocation (%)", min_value=0, max_value=100, value=100, step=1)
-    expense_bps = st.slider("Annual expense (bps)", min_value=0, max_value=100, value=0, step=1)
+    expense_bps = st.slider("Annual expense (bps)", min_value=0, max_value=100, value=0, step=5)
     period_unit = st.radio("Period unit", ["Months", "Years"], horizontal=True)
     period_length = st.number_input(
         f"Number of {period_unit.lower()}",
